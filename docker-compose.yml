@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+  front:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./react-hooks-101:/react-hooks-101
+    working_dir: /react-hooks-101
+    command: yarn start
+    tty: true
+    ports:
+      - 3000:3000
