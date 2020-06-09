@@ -4,6 +4,7 @@ import {
   DELETE_EVENT,
   CHECK_EVENT,
   CHECK_ALL_EVENTS,
+  SORT_EVENT,
 } from "../actions";
 
 // action = {
@@ -48,7 +49,15 @@ const events = (state = [], action) => {
     case CREATE_EVENT:
       const event = { title: action.title, body: action.body, checked: false };
       const length = state.length;
-      const id = length === 0 ? 1 : state[length - 1].id + 1;
+      const id =
+        length === 0
+          ? 1
+          : Math.max.apply(
+              null,
+              state.map((event) => {
+                return event.id;
+              })
+            ) + 1;
       return [...state, { id, ...event }];
     case DELETE_EVENT:
       return state.filter((event) => event.id !== action.id);
@@ -60,6 +69,8 @@ const events = (state = [], action) => {
       );
     case CHECK_ALL_EVENTS:
       return state.map((event) => ({ ...event, checked: action.checked }));
+    case SORT_EVENT:
+      return action.events;
     default:
       return state;
   }

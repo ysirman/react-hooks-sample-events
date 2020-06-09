@@ -1,8 +1,10 @@
 import React, { useContext } from "react";
+import { SortableContainer } from "react-sortable-hoc";
+import arrayMove from "array-move";
 
 import Event from "./Event";
 import AppContext from "../contexts/AppContext";
-import { CHECK_ALL_EVENTS } from "../actions";
+import { CHECK_ALL_EVENTS, SORT_EVENT } from "../actions";
 
 const Events = () => {
   const { state, dispatch } = useContext(AppContext);
@@ -18,6 +20,21 @@ const Events = () => {
   }
   const handleClickCheckAllButton = (e) => {
     dispatch({ type: CHECK_ALL_EVENTS, checked: e.target.checked });
+  };
+
+  const SortableTbody = SortableContainer(({ events }) => (
+    <tbody>
+      {events.map((event, index) => (
+        <Event key={index} index={index} event={event} />
+      ))}
+    </tbody>
+  ));
+
+  const onSortEnd = ({ oldIndex, newIndex }) => {
+    dispatch({
+      type: SORT_EVENT,
+      events: arrayMove(state.events, oldIndex, newIndex),
+    });
   };
 
   return (
@@ -39,11 +56,11 @@ const Events = () => {
             <th></th>
           </tr>
         </thead>
-        <tbody>
-          {state.events.map((event, index) => (
-            <Event key={index} event={event} />
-          ))}
-        </tbody>
+        <SortableTbody
+          events={state.events}
+          onSortEnd={onSortEnd}
+          lockAxis="y"
+        />
       </table>
     </>
   );

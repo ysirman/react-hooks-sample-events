@@ -1,10 +1,11 @@
 import React, { useContext } from "react";
+import { SortableElement } from "react-sortable-hoc";
 
 import { ADD_OPERATION_LOG, DELETE_EVENT, CHECK_EVENT } from "../actions";
 import AppContext from "../contexts/AppContext";
 import { timeCurrentIso8601 } from "../utils";
 
-const Event = ({ event }) => {
+const Event = SortableElement(({ event }) => {
   const { dispatch } = useContext(AppContext);
   const id = event.id;
   const handleClickDeleteButton = () => {
@@ -48,6 +49,6 @@ const Event = ({ event }) => {
       </td>
     </tr>
   );
-};
+});
 
 export default Event;
