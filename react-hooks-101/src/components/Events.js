@@ -1,10 +1,24 @@
-import React, { useContext } from 'react'
+import React, { useContext } from "react";
 
-import Event from './Event'
-import AppContext from '../contexts/AppContext'
+import Event from "./Event";
+import AppContext from "../contexts/AppContext";
+import { CHECK_ALL_EVENTS } from "../actions";
 
 const Events = () => {
-  const { state } = useContext(AppContext)
+  const { state, dispatch } = useContext(AppContext);
+  let checkedAll =
+    state.events.filter((event) => event.checked === true).length ===
+    state.events.length;
+  if (state.events.length === 0) {
+    checkedAll = false;
+  } else {
+    checkedAll =
+      state.events.filter((event) => event.checked === true).length ===
+      state.events.length;
+  }
+  const handleClickCheckAllButton = (e) => {
+    dispatch({ type: CHECK_ALL_EVENTS, checked: e.target.checked });
+  };
 
   return (
     <>
@@ -12,6 +26,13 @@ const Events = () => {
       <table className="table table-hover">
         <thead>
           <tr>
+            <th>
+              <input
+                type="checkbox"
+                checked={checkedAll}
+                onChange={handleClickCheckAllButton}
+              />
+            </th>
             <th>ID</th>
             <th>タイトル</th>
             <th>ボディー</th>
@@ -19,11 +40,13 @@ const Events = () => {
           </tr>
         </thead>
         <tbody>
-          { state.events.map((event, index) => (<Event key={index} event={event} />))}
+          {state.events.map((event, index) => (
+            <Event key={index} event={event} />
+          ))}
         </tbody>
       </table>
     </>
-  )
-}
+  );
+};
 
-export default Events
+export default Events;
